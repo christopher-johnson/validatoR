@@ -4,7 +4,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX dbp: <http://dbpedia.org/property/>
 SELECT * WHERE {
-?s foaf:isPrimaryTopicOf <http://en.wikipedia.org/wiki/Piers_Anthony> .
+?s foaf:isPrimaryTopicOf <http://en.wikipedia.org/wiki/Leonardo_Sciascia> .
 OPTIONAL {?dbpwork dbo:author ?s; dbp:name ?o1} .
 OPTIONAL {?s wdt:P800 ?works .
 ?works rdfs:label ?o2 FILTER (lang(?o2) = "en")}}
