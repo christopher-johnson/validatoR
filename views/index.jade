@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1= title
+  fieldset#ldf-client
+      ul
+        li
+          labelChoose datasources
+          select#datasources multiple
+
+
+        li
+          label Type a SPARQL query
+          textarea#queryText
+
+        li
+          label …or pick an example query
+          select#query
+
+
+        li
+          button(class="start") Execute query
+          button(class="stop",style="display:none") Stop execution
+
+
+        li
+          label Query results
+          pre#results
+
+
+        li
+          label Execution log
+          pre#log
+

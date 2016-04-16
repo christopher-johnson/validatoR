@@ -1,0 +1,13 @@
+library(jsonlite)
+url <- '/tmp/out.json'
+document <- fromJSON(txt=url)
+a <- data.frame(document$'?dbpwork', document$'?o1')
+a <- na.omit(a)
+colnames(a) <- c('subject1','object1')
+b <- data.frame(document$'?works', document$'?o2')
+b <- na.omit(b)
+colnames(b) <- c('subject2','object2')
+diff <- setdiff(a,b)
+m <- merge(a,b, by.x='object1', by.y='object2')
+toJSON(m, pretty=TRUE)
+toJSON(diff, pretty=TRUE)
