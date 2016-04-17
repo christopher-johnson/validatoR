@@ -1,0 +1,13 @@
+library(jsonlite)
+library(dplyr)
+library(rio)
+url <- '/tmp/out.json'
+document <- fromJSON(txt=url)
+a <- data.frame(document$'?dbr', document$'?o1')
+a <- na.omit(a)
+colnames(a) <- c('subject1','object1')
+b <- data.frame(document$'?wde', document$'?o2')
+b <- na.omit(b)
+colnames(b) <- c('subject2','object1')
+m <- merge(a,b, by.x='object1')
+export(m, '/tmp/merge.csv')

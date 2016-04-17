@@ -105,12 +105,19 @@ function validate() {
     data += chunk;
   });
   rs.on('end',function(){
-    var opts = { cwd: './',
+    var opts = { cwd: './Rscripts',
       env: process.env
     };
     opts.env['results'] = data;
 
-    var child = exec('Rscript test.R', opts, function (error, stdout, stderr) {
+    var child1 = exec('Rscript diff.R', opts, function (error, stdout, stderr) {
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
+      if (error !== null) {
+        console.log('exec error: ' + error);
+      }
+    })
+    var child2 = exec('Rscript merge.R', opts, function (error, stdout, stderr) {
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
       if (error !== null) {
