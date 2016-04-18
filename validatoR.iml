@@ -4,6 +4,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Rscript node_modules" level="project" />
+    <orderEntry type="library" name="validatoR node_modules" level="project" />
   </component>
 </module>
