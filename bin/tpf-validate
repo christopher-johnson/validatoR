@@ -3,6 +3,7 @@
 /* Command-line utility to execute SPARQL queries over triple pattern fragments. */
 
 var ldf = require('../ldf-client');
+var validator = require('../lib/validators/validator.js');
 
 // Retrieve and check arguments
 var args = require('minimist')(process.argv.slice(2));
@@ -24,9 +25,10 @@ if (!(args.q || args.f) && args._.length < 2 || args._.length < 1 || args.h || a
     "   -f               evaluates the SPARQL query in the given file",
     "   -c               use the given JSON configuration file (e.g., config.json)",
     "   -t               determines the MIME type of the output (e.g., application/json)",
+    "   -o               sets the path of the outfile",
     "   -l               sets the log level (e.g., debug, warn, info)",
     "   --help           prints this message",
-    "   --listformats    prints the supported MIME types",
+    "   --listformats    prints the supported MIME types"
   ].join('\n'));
   return process.exit(1);
 }
@@ -36,9 +38,7 @@ var fs = require('fs'),
     path = require('path'),
     N3 = require('n3'),
     Logger = require('../ldf-client').Logger;
-    exec = require('child_process').exec;
-    dbWriteStream = require('../lib/writers/DBResultWriter');
-    var db = dbWriteStream();
+
 
 // Parse and initialize configuration
 var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'),
@@ -46,7 +46,8 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
     queryFile = args.f || args.q || args._.pop(),
     startFragments = args._,
     query = args.q || (args.f || fs.existsSync(queryFile) ? fs.readFileSync(queryFile, 'utf8') : queryFile),
-    mimeType = args.t || 'application/json';
+    mimeType = args.t || 'application/json',
+    outFile = args.o || '/tmp/out.json';
 
 // Configure logging
 Logger.setLevel(args.l || 'warning');
@@ -60,12 +61,12 @@ try {
   case 'ASK':
   case 'SELECT':
     writer = new ldf.SparqlResultWriter(mimeType, sparqlIterator);
-    var results =  fs.createWriteStream('/tmp/out.json');
+    var results =  fs.createWriteStream(outFile);
     writer.on('data', function (data) {
       process.stdout.write(data);
       results.write(data);
     });
-    writer.on('end', function() { validate();});
+    writer.on('end', function() { validator.validate(outFile);});
     break;
   // Write an RDF representation of all results
   case 'CONSTRUCT':
@@ -98,34 +99,4 @@ catch (error) {
   }
 }
 
-function validate() {
-  var data = '';
-  rs = fs.createReadStream('/tmp/out.json');
-  rs.on('data', function(chunk) {
-    data += chunk;
-  });
-  rs.on('end',function(){
-    var opts = { cwd: './Rscripts',
-      env: process.env
-    };
-    opts.env['results'] = data;
 
-    var child1 = exec('Rscript diff.R', opts, function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-    })
-    var child2 = exec('Rscript merge.R', opts, function (error, stdout, stderr) {
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-    })
-  });
-  rs.on('error', function(err){
-    console.log(err.stack);
-  });
-}

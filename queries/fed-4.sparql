@@ -1,0 +1,9 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+SELECT * WHERE {
+{?dbr rdf:type dbo:Nerve;rdfs:label ?o1 FILTER (lang(?o1) = "en")} UNION {?wde wdt:P31 wd:Q9620; rdfs:label ?o2 FILTER (lang(?o2) = "en")}
+}

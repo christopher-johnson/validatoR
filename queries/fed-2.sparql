@@ -1,0 +1,9 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+SELECT DISTINCT ?dbr ?wde ?o1 ?o2 WHERE {
+{?s dbo:kingdom ?dbr . ?dbr rdfs:label ?o1 FILTER (lang(?o1) = "en")} UNION {?wde wdt:P105 wd:Q36732; rdfs:label ?o2 FILTER (lang(?o2) = "en")}
+}
