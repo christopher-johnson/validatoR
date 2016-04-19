@@ -14,5 +14,10 @@
     "dbpedia-owl": "http://dbpedia.org/ontology/",
     "dbpprop":     "http://dbpedia.org/property/",
     "schema":      "http://schema.org/"
+  },
+  "paths": {
+    "outFile": "out.json",
+    "outDir": "../exports/",
+    "exportDir": "../exports/"
   }
 }

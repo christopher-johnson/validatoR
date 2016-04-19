@@ -25,7 +25,7 @@ if (!(args.q || args.f) && args._.length < 2 || args._.length < 1 || args.h || a
     "   -f               evaluates the SPARQL query in the given file",
     "   -c               use the given JSON configuration file (e.g., config.json)",
     "   -t               determines the MIME type of the output (e.g., application/json)",
-    "   -o               sets the path of the outfile",
+    "   -o               sets the name of the outfile",
     "   -l               sets the log level (e.g., debug, warn, info)",
     "   --help           prints this message",
     "   --listformats    prints the supported MIME types"
@@ -47,8 +47,8 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
     startFragments = args._,
     query = args.q || (args.f || fs.existsSync(queryFile) ? fs.readFileSync(queryFile, 'utf8') : queryFile),
     mimeType = args.t || 'application/json',
-    outFile = args.o || '/tmp/out.json';
-
+    outFile = args.o || 'out.json';
+var xp = path.join(__dirname, config.paths.outDir) + outFile;
 // Configure logging
 Logger.setLevel(args.l || 'warning');
 
@@ -61,12 +61,12 @@ try {
   case 'ASK':
   case 'SELECT':
     writer = new ldf.SparqlResultWriter(mimeType, sparqlIterator);
-    var results =  fs.createWriteStream(outFile);
+    var results =  fs.createWriteStream(xp);
     writer.on('data', function (data) {
       process.stdout.write(data);
       results.write(data);
     });
-    writer.on('end', function() { validator.validate(outFile);});
+    writer.on('end', function() { validator.validate(config, outFile);});
     break;
   // Write an RDF representation of all results
   case 'CONSTRUCT':

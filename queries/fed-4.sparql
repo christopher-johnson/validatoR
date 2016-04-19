@@ -5,5 +5,5 @@ PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 SELECT * WHERE {
-{?dbr rdf:type dbo:Nerve;rdfs:label ?o1 FILTER (lang(?o1) = "en")} UNION {?wde wdt:P31 wd:Q9620; rdfs:label ?o2 FILTER (lang(?o2) = "en")}
+{?dbr rdf:type dbo:Vein;rdfs:label ?o1 FILTER (lang(?o1) = "en")} UNION {?wde wdt:P31 wd:Q9609; rdfs:label ?o2 FILTER (lang(?o2) = "en")}
 }
